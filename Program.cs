@@ -1,24 +1,26 @@
-﻿using System;
+using System;
 
-namespace LabWork
+class Program
 {
-    // Даний проект є шаблоном для виконання лабораторних робіт
-    // з курсу "Об'єктно-орієнтоване програмування та патерни проектування"
-    // Необхідно змінювати і дописувати код лише в цьому проекті
-    // Відео-інструкції щодо роботи з github можна переглянути 
-    // за посиланням https://www.youtube.com/@ViktorZhukovskyy/videos 
-
-    class Result
-    { 
-    // TODO: do it !
-    }
-    
-    class Program
+    static void Main()
     {
-        static void Main(string[] args)
-        {
-            
-            Console.WriteLine("Hello World!");
-        }
+        // Введення сторін трикутника
+        Console.Write("Введіть сторону a: ");
+        double a = Convert.ToDouble(Console.ReadLine());
+
+        Console.Write("Введіть сторону b: ");
+        double b = Convert.ToDouble(Console.ReadLine());
+
+        Console.Write("Введіть сторону c: ");
+        double c = Convert.ToDouble(Console.ReadLine());
+
+        // Обчислення периметра
+        double perimeter = a + b + c;
+
+        // Виведення результату
+        Console.WriteLine("Периметр трикутника: " + perimeter);
+
+        Console.WriteLine("Натисніть будь-яку клавішу для виходу...");
+        Console.ReadKey();
     }
 }
