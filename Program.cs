@@ -1,26 +1,89 @@
 using System;
 
-class Program
+namespace Lab4
 {
-    static void Main()
+    // ===== КЛАС ТОЧКА =====
+    class Point
     {
-        // Введення сторін трикутника
-        Console.Write("Введіть сторону a: ");
-        double a = Convert.ToDouble(Console.ReadLine());
+        public double X, Y;
 
-        Console.Write("Введіть сторону b: ");
-        double b = Convert.ToDouble(Console.ReadLine());
+        public Point(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
 
-        Console.Write("Введіть сторону c: ");
-        double c = Convert.ToDouble(Console.ReadLine());
+    // ===== КЛАС ПРЯМА =====
+    // Пряма задана коефіцієнтами A, B, C:  A*x + B*y + C = 0
+    class Line
+    {
+        public double A, B, C;
 
-        // Обчислення периметра
-        double perimeter = a + b + c;
+        public Line(double A, double B, double C)
+        {
+            this.A = A;
+            this.B = B;
+            this.C = C;
+        }
 
-        // Виведення результату
-        Console.WriteLine("Периметр трикутника: " + perimeter);
+        // метод: чи лежить точка на прямій
+        public bool ContainsPoint(Point p)
+        {
+            return Math.Abs(A * p.X + B * p.Y + C) < 0.000001;
+        }
+    }
 
-        Console.WriteLine("Натисніть будь-яку клавішу для виходу...");
-        Console.ReadKey();
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.Write("Input number of lines: ");
+            int n = Convert.ToInt32(Console.ReadLine());
+
+            Line[] lines = new Line[n];
+
+            // введення прямих
+            for (int i = 0; i < n; i++)
+            {
+                Console.WriteLine($"Enter A, B, C for line #{i + 1}:");
+                double A = Convert.ToDouble(Console.ReadLine());
+                double B = Convert.ToDouble(Console.ReadLine());
+                double C = Convert.ToDouble(Console.ReadLine());
+
+                lines[i] = new Line(A, B, C);
+            }
+
+            // введення двох точок
+            Console.WriteLine("Enter coordinates of point 1 (x1, y1):");
+            Point p1 = new Point(
+                Convert.ToDouble(Console.ReadLine()),
+                Convert.ToDouble(Console.ReadLine())
+            );
+
+            Console.WriteLine("Enter coordinates of point 2 (x2, y2):");
+            Point p2 = new Point(
+                Convert.ToDouble(Console.ReadLine()),
+                Convert.ToDouble(Console.ReadLine())
+            );
+
+            Console.WriteLine("\nLines that contain at least one of the points:");
+
+            bool found = false;
+
+            for (int i = 0; i < n; i++)
+            {
+                if (lines[i].ContainsPoint(p1) || lines[i].ContainsPoint(p2))
+                {
+                    Console.WriteLine($"Line #{i + 1}");
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine("No line contains the entered points.");
+            }
+        }
     }
 }
