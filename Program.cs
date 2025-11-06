@@ -1,89 +1,108 @@
 using System;
 
-namespace Lab4
+class QuadraticEquation
 {
-    // ===== КЛАС ТОЧКА =====
-    class Point
-    {
-        public double X, Y;
+    // Властивості
+    public double A { get; set; }
+    public double B { get; set; }
+    public double C { get; set; }
 
-        public Point(double x, double y)
-        {
-            X = x;
-            Y = y;
-        }
+    public QuadraticEquation(double a, double b, double c)
+    {
+        A = a;
+        B = b;
+        C = c;
     }
 
-    // ===== КЛАС ПРЯМА =====
-    // Пряма задана коефіцієнтами A, B, C:  A*x + B*y + C = 0
-    class Line
+    // Метод обчислення кількості дійсних коренів
+    public int RealRootsCount()
     {
-        public double A, B, C;
-
-        public Line(double A, double B, double C)
+        // Випадок: a = 0 → рівняння стає лінійним
+        if (A == 0)
         {
-            this.A = A;
-            this.B = B;
-            this.C = C;
+            if (B == 0)
+            {
+                // 0x + C = 0 → або коренів немає, або ∞ (не беремо ∞)
+                return 0;
+            }
+            else
+            {
+                // Лінійне рівняння має один корінь
+                return 1;
+            }
         }
 
-        // метод: чи лежить точка на прямій
-        public bool ContainsPoint(Point p)
-        {
-            return Math.Abs(A * p.X + B * p.Y + C) < 0.000001;
-        }
+        double D = B * B - 4 * A * C;
+
+        if (D > 0)
+            return 2;
+        else if (D == 0)
+            return 1;
+        else
+            return 0;
     }
+}
 
-    class Program
+class Program
+{
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        Console.Write("Введіть кількість квадратних рівнянь: ");
+        int n;
+
+        while (!int.TryParse(Console.ReadLine(), out n) || n <= 0)
         {
-            Console.Write("Input number of lines: ");
-            int n = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Помилка! Введіть додатнє число: ");
+        }
 
-            Line[] lines = new Line[n];
+        QuadraticEquation[] arr = new QuadraticEquation[n];
 
-            // введення прямих
-            for (int i = 0; i < n; i++)
+        // Введення коефіцієнтів
+        for (int i = 0; i < n; i++)
+        {
+            Console.WriteLine($"\nВведіть коефіцієнти A, B, C для рівняння #{i + 1}:");
+
+            double a, b, c;
+
+            Console.Write("A = ");
+            while (!double.TryParse(Console.ReadLine(), out a))
+                Console.Write("Некоректний ввід! A = ");
+
+            Console.Write("B = ");
+            while (!double.TryParse(Console.ReadLine(), out b))
+                Console.Write("Некоректний ввід! B = ");
+
+            Console.Write("C = ");
+            while (!double.TryParse(Console.ReadLine(), out c))
+                Console.Write("Некоректний ввід! C = ");
+
+            arr[i] = new QuadraticEquation(a, b, c);
+        }
+
+        // Пошук рівняння з максимальною кількістю коренів
+        int maxRoots = -1;
+        int index = -1;
+
+        for (int i = 0; i < n; i++)
+        {
+            int roots = arr[i].RealRootsCount();
+            if (roots > maxRoots)
             {
-                Console.WriteLine($"Enter A, B, C for line #{i + 1}:");
-                double A = Convert.ToDouble(Console.ReadLine());
-                double B = Convert.ToDouble(Console.ReadLine());
-                double C = Convert.ToDouble(Console.ReadLine());
-
-                lines[i] = new Line(A, B, C);
+                maxRoots = roots;
+                index = i;
             }
+        }
 
-            // введення двох точок
-            Console.WriteLine("Enter coordinates of point 1 (x1, y1):");
-            Point p1 = new Point(
-                Convert.ToDouble(Console.ReadLine()),
-                Convert.ToDouble(Console.ReadLine())
-            );
-
-            Console.WriteLine("Enter coordinates of point 2 (x2, y2):");
-            Point p2 = new Point(
-                Convert.ToDouble(Console.ReadLine()),
-                Convert.ToDouble(Console.ReadLine())
-            );
-
-            Console.WriteLine("\nLines that contain at least one of the points:");
-
-            bool found = false;
-
-            for (int i = 0; i < n; i++)
-            {
-                if (lines[i].ContainsPoint(p1) || lines[i].ContainsPoint(p2))
-                {
-                    Console.WriteLine($"Line #{i + 1}");
-                    found = true;
-                }
-            }
-
-            if (!found)
-            {
-                Console.WriteLine("No line contains the entered points.");
-            }
+        // Виведення результату
+        Console.WriteLine("\n==== РЕЗУЛЬТАТ ====");
+        if (index != -1)
+        {
+            Console.WriteLine($"Рівняння #{index + 1} має найбільшу кількість дійсних коренів: {maxRoots}");
+            Console.WriteLine($"Коефіцієнти: A={arr[index].A}, B={arr[index].B}, C={arr[index].C}");
+        }
+        else
+        {
+            Console.WriteLine("Не вдалося знайти коректних рівнянь.");
         }
     }
 }
